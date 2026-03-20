@@ -1,6 +1,6 @@
-import React from 'react';
-import { PersonalData, CheckupData, ReminderSettings } from '../types';
-import { Bell, BellOff, Info } from 'lucide-react';
+import React, { useRef } from 'react';
+import { PersonalData, CheckupData, ReminderSettings, AppState } from '../types';
+import { Bell, BellOff, Info, Download, Upload, Database } from 'lucide-react';
 
 interface ProfileProps {
   personalData: PersonalData;
@@ -9,6 +9,8 @@ interface ProfileProps {
   updatePersonalData: (data: Partial<PersonalData>) => void;
   updateCheckupData: (data: Partial<CheckupData>) => void;
   updateReminderSettings: (data: Partial<ReminderSettings>) => void;
+  appState: AppState;
+  importAppState: (state: AppState) => void;
 }
 
 export default function Profile({ 
@@ -17,14 +19,58 @@ export default function Profile({
   reminderSettings,
   updatePersonalData, 
   updateCheckupData,
-  updateReminderSettings
+  updateReminderSettings,
+  appState,
+  importAppState
 }: ProfileProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handlePersonalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updatePersonalData({ [e.target.name]: e.target.value });
   };
 
   const handleCheckupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateCheckupData({ [e.target.name]: e.target.value });
+  };
+
+  const handleExport = () => {
+    const dataStr = JSON.stringify(appState, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `if-12week-backup-${new Date().toLocaleDateString('th-TH').replace(/\//g, '-')}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileReader = new FileReader();
+    if (e.target.files && e.target.files[0]) {
+      fileReader.readAsText(e.target.files[0], "UTF-8");
+      fileReader.onload = (event) => {
+        try {
+          const content = event.target?.result;
+          if (typeof content === 'string') {
+            const importedData = JSON.parse(content);
+            // Basic validation
+            if (importedData.personalData && importedData.checkupData) {
+              if (window.confirm('คุณต้องการนำเข้าข้อมูลนี้ใช่หรือไม่? ข้อมูลปัจจุบันจะถูกแทนที่ด้วยข้อมูลจากไฟล์สำรอง')) {
+                importAppState(importedData);
+                alert('นำเข้าข้อมูลสำเร็จ!');
+              }
+            } else {
+              alert('รูปแบบไฟล์ไม่ถูกต้อง');
+            }
+          }
+        } catch (error) {
+          alert('เกิดข้อผิดพลาดในการนำเข้าข้อมูล: ' + error);
+        }
+      };
+    }
+    // Reset input
+    if (e.target) e.target.value = '';
   };
 
   const requestNotificationPermission = async () => {
@@ -53,6 +99,54 @@ export default function Profile({
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Data Management Section - Moved to top for visibility */}
+      <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+        <div className="bg-stone-50 px-6 py-4 border-b border-stone-200 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Database className="h-5 w-5 text-emerald-600" />
+            <h2 className="text-lg font-semibold text-stone-800">จัดการข้อมูล (สำรอง/นำเข้า)</h2>
+          </div>
+          <span className="text-[10px] text-stone-400">Build: 20260320-0805</span>
+        </div>
+        <div className="p-6">
+          <p className="text-sm text-stone-600 mb-6">
+            คุณสามารถสำรองข้อมูลทั้งหมดเก็บไว้ในเครื่องคอมพิวเตอร์ หรือนำข้อมูลที่เคยสำรองไว้กลับมาใช้งานได้ 
+            ข้อมูลนี้จะรวมถึงบันทึกรายวันและประเมินรายสัปดาห์ทั้งหมด
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={handleExport}
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors shadow-sm"
+            >
+              <Download className="h-5 w-5" />
+              สำรองข้อมูล (ดาวน์โหลดไฟล์)
+            </button>
+            
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-white border-2 border-emerald-600 text-emerald-600 rounded-xl font-medium hover:bg-emerald-50 transition-colors"
+            >
+              <Upload className="h-5 w-5" />
+              นำเข้าข้อมูลจากไฟล์
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImport}
+              accept=".json"
+              className="hidden"
+            />
+          </div>
+          <div className="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3">
+            <Info className="h-5 w-5 text-amber-600 shrink-0" />
+            <p className="text-xs text-amber-800">
+              <strong>คำแนะนำ:</strong> ควรสำรองข้อมูลเป็นประจำ 
+              หากคุณต้องการส่งข้อมูลเข้าอีเมล ให้ดาวน์โหลดไฟล์นี้แล้วแนบไฟล์ส่งไปที่อีเมลของคุณเองได้เลยครับ
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Reminder Settings */}
       <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
         <div className="bg-amber-50 px-6 py-4 border-b border-amber-100 flex items-center justify-between">
@@ -279,6 +373,7 @@ export default function Profile({
           </div>
         </div>
       </div>
+
     </div>
   );
 }

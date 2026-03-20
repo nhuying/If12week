@@ -13,9 +13,10 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
+        injectRegister: 'inline',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
         manifest: {
-          name: 'IF 12-Week Tracker',
+          name: 'IF 12-Week Tracker v1.2.1',
           short_name: 'IF Tracker',
           description: '12-Week Intermittent Fasting and Habit Tracker',
           theme_color: '#10b981',
@@ -31,16 +32,6 @@ export default defineConfig(({mode}) => {
               sizes: '512x512',
               type: 'image/svg+xml',
               purpose: 'maskable'
-            },
-            {
-              src: 'pwa-192x192.png',
-              sizes: '192x192',
-              type: 'image/png'
-            },
-            {
-              src: 'pwa-512x512.png',
-              sizes: '512x512',
-              type: 'image/png'
             }
           ]
         }

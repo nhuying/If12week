@@ -192,13 +192,35 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans">
+      {/* TEST BANNER - REMOVE AFTER VERIFICATION */}
+      <div className="bg-red-600 text-white text-center py-1 text-[10px] font-bold uppercase tracking-widest">
+        --- New Version 1.2 Detected ---
+      </div>
       <header className="bg-white border-b border-stone-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-2">
               <Activity className="h-6 w-6 text-emerald-600" />
-              <h1 className="text-xl font-semibold tracking-tight text-stone-800">IF 12-Week Tracker</h1>
+              <div className="flex flex-col">
+                <h1 className="text-xl font-semibold tracking-tight text-stone-800 leading-none">IF 12-Week Tracker</h1>
+                <span className="text-[10px] text-stone-400 font-medium">Version 1.2.1 (Final Fix)</span>
+              </div>
             </div>
+            <button 
+              onClick={() => {
+                if (confirm('ระบบจะล้างแคชและเริ่มแอปใหม่เพื่ออัปเดต คุณต้องการดำเนินการต่อหรือไม่?')) {
+                  if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(registrations => {
+                      for(let registration of registrations) registration.unregister();
+                    });
+                  }
+                  window.location.reload();
+                }
+              }}
+              className="text-[10px] bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded transition-colors border border-red-100 font-bold"
+            >
+              Force Update (ล้างแคช)
+            </button>
           </div>
           <nav className="flex space-x-8 overflow-x-auto">
             <button
@@ -279,6 +301,8 @@ export default function App() {
             updatePersonalData={updatePersonalData}
             updateCheckupData={updateCheckupData}
             updateReminderSettings={updateReminderSettings}
+            appState={appState}
+            importAppState={setAppState}
           />
         )}
         {activeTab === 'daily' && (
