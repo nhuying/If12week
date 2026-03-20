@@ -93,7 +93,7 @@ export default function App() {
         
         new Notification('ได้เวลาบันทึกพฤติกรรมแล้ว!', {
           body: 'อย่าลืมบันทึกจำนวนก้าวเดินและการยืดเส้นฯ ของวันนี้ด้วยนะครับ',
-          icon: '/mask-icon.svg'
+          icon: 'mask-icon.svg'
         });
         setAppState(prev => ({ ...prev, lastDailyNotification: todayStr }));
       }
@@ -110,7 +110,7 @@ export default function App() {
         
         new Notification('สรุปผลรายสัปดาห์!', {
           body: 'ได้เวลาประเมินความรู้สึกและตัวชี้วัดสุขภาพประจำสัปดาห์แล้วครับ',
-          icon: '/mask-icon.svg'
+          icon: 'mask-icon.svg'
         });
         setAppState(prev => ({ ...prev, lastWeeklyNotification: todayStr }));
       }

@@ -38,7 +38,7 @@ export default function Profile({
       updateReminderSettings({ dailyEnabled: true });
       new Notification('เปิดการแจ้งเตือนสำเร็จ!', {
         body: 'คุณจะได้รับการแจ้งเตือนเมื่อถึงเวลาที่กำหนด',
-        icon: '/mask-icon.svg'
+        icon: 'mask-icon.svg'
       });
     }
   };
