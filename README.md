@@ -1,11 +1,35 @@
-<div align="center">
+# IF 12-Week Tracker (PWA)
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+แอปพลิเคชันติดตามผลการทำ Intermittent Fasting และพฤติกรรมสุขภาพตลอด 12 สัปดาห์ ในรูปแบบ Progressive Web App (PWA) ที่สามารถติดตั้งบนมือถือได้เหมือนแอปจริง
 
-  <h1>Built with AI Studio</h2>
+## 🚀 วิธีการนำขึ้น GitHub และใช้งาน
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+### 1. เตรียมโค้ด
+- ดาวน์โหลดไฟล์ทั้งหมดจากโปรเจกต์นี้
+- สร้าง Repository ใหม่บน GitHub ของคุณ
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+### 2. การตั้งค่า GitHub Pages
+หากคุณต้องการใช้งานผ่าน GitHub Pages:
+1. อัปโหลดไฟล์ทั้งหมดขึ้น GitHub
+2. ไปที่เมนู **Settings** -> **Pages**
+3. ในส่วน **Build and deployment** เลือก Source เป็น **GitHub Actions**
+4. หรือใช้คำสั่ง `npm run deploy` หากคุณรันบนเครื่องตัวเอง
 
-</div>
+### 3. การใช้งานบนมือถือ (PWA)
+เมื่อคุณเปิดเว็บไซต์ผ่านมือถือ (Safari บน iOS หรือ Chrome บน Android):
+- **iOS:** กดปุ่ม **Share** (สี่เหลี่ยมมีลูกศรชี้ขึ้น) -> เลือก **"Add to Home Screen"** (เพิ่มไปยังหน้าจอโฮม)
+- **Android:** กดปุ่ม **Menu** (จุด 3 จุด) -> เลือก **"Install App"** หรือ **"Add to Home Screen"**
+
+แอปจะปรากฏบนหน้าจอโฮมของคุณ และสามารถใช้งานได้โดยไม่มีแถบที่อยู่เว็บ (เหมือนแอปจริง)
+
+## 🛠 การพัฒนาต่อ
+- **Vite Config:** ผมได้ตั้งค่า `base: './'` ไว้ใน `vite.config.ts` เพื่อให้แอปสามารถรันได้ทั้งบนโดเมนหลักและซับโดเมน (เช่น GitHub Pages) โดยไม่ต้องแก้ไขโค้ดครับ
+- **Icons:** ปัจจุบันใช้ไอคอน SVG พื้นฐาน คุณสามารถเปลี่ยนไอคอนในโฟลเดอร์ `public/` (pwa-192x192.png, pwa-512x512.png) เป็นรูปภาพที่คุณต้องการได้
+- **Google Forms:** อย่าลืมตรวจสอบลิงก์ใน `src/components/Feedback.tsx` ว่าเป็นลิงก์ของคุณแล้ว
+
+## 📦 เทคโนโลยีที่ใช้
+- React 19
+- Vite (พร้อม vite-plugin-pwa)
+- Tailwind CSS
+- Lucide React (Icons)
+- Recharts (กราฟ)
