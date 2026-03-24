@@ -36,15 +36,15 @@ export default function ProgressCharts({ personalData, weeklyMetrics, dailyHabit
 
   return (
     <div className="space-y-8">
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 h-80">
-        <h3 className="text-lg font-bold text-stone-800 mb-6">กราฟติดตามน้ำหนัก (กก.)</h3>
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+        <h3 className="text-lg font-bold text-stone-800 mb-4">กราฟติดตามน้ำหนัก (กก.)</h3>
+        <ResponsiveContainer width="100%" height={280}>
           <LineChart data={chartData}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis domain={['auto', 'auto']} /><Tooltip /><Legend /><Line type="monotone" dataKey="weight" name="น้ำหนัก" stroke="#f97316" strokeWidth={3} connectNulls /></LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 h-80">
-        <h3 className="text-lg font-bold text-stone-800 mb-6">กราฟติดตามการเดิน (เฉลี่ยก้าว/วัน)</h3>
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+        <h3 className="text-lg font-bold text-stone-800 mb-4">กราฟติดตามการเดิน (เฉลี่ยก้าว/วัน)</h3>
+        <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis /><Tooltip /><Legend /><Bar dataKey="avgSteps" name="ก้าวเดินเฉลี่ย" fill="#10b981" radius={[4, 4, 0, 0]} /></BarChart>
         </ResponsiveContainer>
       </div>
