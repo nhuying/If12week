@@ -25,10 +25,14 @@ export default function DailyTracker({ dailyHabits, updateDailyHabits, personalD
   const handlePrevWeek = () => setCurrentWeek((prev) => Math.max(1, prev - 1));
   const handleNextWeek = () => setCurrentWeek((prev) => prev + 1);
 
-  const weekData = dailyHabits[currentWeek] || {};
+  const weekData = dailyHabits[currentWeek] || (dailyHabits as any)[currentWeek.toString()] || {};
+
+  const getDayData = (dayIdx: number) => {
+    return weekData[dayIdx] || (weekData as any)[dayIdx.toString()];
+  };
 
   const calculateDailyTotal = (day: number) => {
-    const dayData = weekData[day];
+    const dayData = getDayData(day);
     if (!dayData) return 0;
     // Only count boolean habits for the score
     return HABITS.filter(h => dayData[h.id as keyof typeof dayData] === true).length;
@@ -93,12 +97,15 @@ export default function DailyTracker({ dailyHabits, updateDailyHabits, personalD
                   {habit.label}
                 </td>
                 {DAYS.map((_, dayIdx) => {
-                  const isChecked = weekData[dayIdx]?.[habit.id as keyof typeof weekData[0]] === true;
+                  const dayData = getDayData(dayIdx);
+                  const isChecked = dayData?.[habit.id as keyof typeof dayData] === true;
                   return (
                     <td key={dayIdx} className="px-2 py-4 text-center">
                       <button
-                        onClick={() => updateDailyHabits(currentWeek, dayIdx, habit.id, !isChecked)}
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center mx-auto transition-all ${
+                        onClick={() => {
+                          updateDailyHabits(currentWeek, dayIdx, habit.id, !isChecked);
+                        }}
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center mx-auto transition-all cursor-pointer ${
                           isChecked
                             ? 'bg-emerald-500 text-white shadow-sm scale-110'
                             : 'bg-stone-100 text-transparent hover:bg-stone-200 border border-stone-200'

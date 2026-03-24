@@ -99,54 +99,6 @@ export default function Profile({
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Data Management Section - Moved to top for visibility */}
-      <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-        <div className="bg-stone-50 px-6 py-4 border-b border-stone-200 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Database className="h-5 w-5 text-emerald-600" />
-            <h2 className="text-lg font-semibold text-stone-800">จัดการข้อมูล (สำรอง/นำเข้า)</h2>
-          </div>
-          <span className="text-[10px] text-stone-400">Build: 20260320-0805</span>
-        </div>
-        <div className="p-6">
-          <p className="text-sm text-stone-600 mb-6">
-            คุณสามารถสำรองข้อมูลทั้งหมดเก็บไว้ในเครื่องคอมพิวเตอร์ หรือนำข้อมูลที่เคยสำรองไว้กลับมาใช้งานได้ 
-            ข้อมูลนี้จะรวมถึงบันทึกรายวันและประเมินรายสัปดาห์ทั้งหมด
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={handleExport}
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors shadow-sm"
-            >
-              <Download className="h-5 w-5" />
-              สำรองข้อมูล (ดาวน์โหลดไฟล์)
-            </button>
-            
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-white border-2 border-emerald-600 text-emerald-600 rounded-xl font-medium hover:bg-emerald-50 transition-colors"
-            >
-              <Upload className="h-5 w-5" />
-              นำเข้าข้อมูลจากไฟล์
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImport}
-              accept=".json"
-              className="hidden"
-            />
-          </div>
-          <div className="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3">
-            <Info className="h-5 w-5 text-amber-600 shrink-0" />
-            <p className="text-xs text-amber-800">
-              <strong>คำแนะนำ:</strong> ควรสำรองข้อมูลเป็นประจำ 
-              หากคุณต้องการส่งข้อมูลเข้าอีเมล ให้ดาวน์โหลดไฟล์นี้แล้วแนบไฟล์ส่งไปที่อีเมลของคุณเองได้เลยครับ
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Reminder Settings */}
       <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
         <div className="bg-amber-50 px-6 py-4 border-b border-amber-100 flex items-center justify-between">
@@ -370,6 +322,49 @@ export default function Profile({
                 />
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Data Management Section - Moved to bottom and made smaller */}
+      <div className="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+        <div className="bg-stone-50 px-4 py-3 border-b border-stone-200 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Database className="h-4 w-4 text-emerald-600" />
+            <h2 className="text-sm font-semibold text-stone-800">จัดการข้อมูล (สำรอง/นำเข้า)</h2>
+          </div>
+          <span className="text-[9px] text-stone-400">Build: 20260320-0833</span>
+        </div>
+        <div className="p-4">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={handleExport}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors shadow-sm"
+            >
+              <Download className="h-4 w-4" />
+              สำรองข้อมูล
+            </button>
+            
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-emerald-600 text-emerald-600 rounded-lg text-sm font-medium hover:bg-emerald-50 transition-colors"
+            >
+              <Upload className="h-4 w-4" />
+              นำเข้าข้อมูล
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImport}
+              accept=".json"
+              className="hidden"
+            />
+          </div>
+          <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-100 flex gap-2">
+            <Info className="h-4 w-4 text-amber-600 shrink-0" />
+            <p className="text-[10px] text-amber-800 leading-relaxed">
+              <strong>คำแนะนำ:</strong> ควรสำรองข้อมูลเป็นประจำ หากต้องการส่งข้อมูลเข้าอีเมล ให้ดาวน์โหลดไฟล์นี้แล้วแนบไฟล์ส่งไปที่อีเมลของคุณเองได้เลยครับ
+            </p>
           </div>
         </div>
       </div>

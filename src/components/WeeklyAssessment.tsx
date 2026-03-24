@@ -33,8 +33,8 @@ export default function WeeklyAssessment({
   const handlePrevWeek = () => setCurrentWeek((prev) => Math.max(1, prev - 1));
   const handleNextWeek = () => setCurrentWeek((prev) => prev + 1); // Removed Math.min(12) limit
 
-  const weekData = (weeklyFeelings || {})[currentWeek] || {};
-  const metricsData = (weeklyMetrics || {})[currentWeek] || { weight: '', waist: '', fastingSugar: '' };
+  const weekData = (weeklyFeelings || {})[currentWeek] || (weeklyFeelings as any)?.[currentWeek.toString()] || {};
+  const metricsData = (weeklyMetrics || {})[currentWeek] || (weeklyMetrics as any)?.[currentWeek.toString()] || { weight: '', waist: '', fastingSugar: '' };
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden animate-in fade-in duration-500">

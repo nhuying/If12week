@@ -26,8 +26,8 @@ export default function ProgressCharts({ personalData, weeklyMetrics, dailyHabit
     const data = [];
 
     for (let i = 1; i <= maxWeek; i++) {
-      const metrics = weeklyMetrics[i] || { weight: '', waist: '', fastingSugar: '' };
-      const weekHabits = dailyHabits[i] || {};
+      const metrics = weeklyMetrics[i] || (weeklyMetrics as any)[i.toString()] || { weight: '', waist: '', fastingSugar: '' };
+      const weekHabits = dailyHabits[i] || (dailyHabits as any)[i.toString()] || {};
       
       // Calculate average steps for the week
       let totalSteps = 0;
@@ -36,7 +36,7 @@ export default function ProgressCharts({ personalData, weeklyMetrics, dailyHabit
       const targetStretching = parseInt(personalData.goal3StretchingTime) || 0;
 
       for (let day = 0; day < 7; day++) {
-        const dayData = weekHabits[day];
+        const dayData = weekHabits[day] || (weekHabits as any)[day.toString()];
         if (dayData) {
           const steps = parseInt(dayData.stepsCount) || 0;
           if (steps > 0) {
