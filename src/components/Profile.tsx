@@ -333,7 +333,7 @@ export default function Profile({
             <Database className="h-4 w-4 text-emerald-600" />
             <h2 className="text-sm font-semibold text-stone-800">จัดการข้อมูล (สำรอง/นำเข้า)</h2>
           </div>
-          <span className="text-[9px] text-stone-400">Build: 20260324-1338</span>
+          <span className="text-[9px] text-stone-400">Build: 20260320-0833</span>
         </div>
         <div className="p-4">
           <div className="flex flex-col sm:flex-row gap-3">
