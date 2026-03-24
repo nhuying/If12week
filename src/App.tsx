@@ -42,9 +42,17 @@ const initialAppState: AppState = {
   weeklyFeelings: {},
   weeklyMetrics: {},
   reminderSettings: initialReminderSettings,
-  lastDailyNotification: '',   // ← เพิ่มเพื่อให้ type ครบ
-  lastWeeklyNotification: '',  // ← เพิ่มเพื่อให้ type ครบ
+  lastDailyNotification: '',
+  lastWeeklyNotification: '',
 };
+
+const TABS = [
+  { id: 'profile' as const, label: 'โปรไฟล์', icon: User },
+  { id: 'daily' as const, label: 'รายวัน', icon: CheckSquare },
+  { id: 'weekly' as const, label: 'รายสัปดาห์', icon: Calendar },
+  { id: 'charts' as const, label: 'กราฟ', icon: LineChart },
+  { id: 'feedback' as const, label: 'Feedback', icon: MessageSquare },
+];
 
 export default function App() {
   const [appState, setAppState] = useLocalStorage<AppState>('if-tracker-state', initialAppState);
@@ -74,6 +82,10 @@ export default function App() {
     setAppState(prev => ({ ...prev, reminderSettings: { ...prev.reminderSettings, ...data } }));
   };
 
+  const importAppState = (state: AppState) => {
+    setAppState(state);
+  };
+
   // Notification System
   useEffect(() => {
     if (!('Notification' in window) || Notification.permission !== 'granted') return;
@@ -97,7 +109,7 @@ export default function App() {
 
       // Weekly Notification
       const currentDay = now.getDay();
-      const adjustedDay = (currentDay + 6) % 7; // ทำให้ 0 = Monday, 6 = Sunday
+      const adjustedDay = (currentDay + 6) % 7;
 
       if (appState.reminderSettings.weeklyEnabled &&
           adjustedDay === appState.reminderSettings.weeklyDay &&
@@ -113,12 +125,12 @@ export default function App() {
     };
 
     const interval = setInterval(checkNotifications, 60000);
-    checkNotifications(); // ตรวจครั้งแรก
+    checkNotifications();
 
     return () => clearInterval(interval);
   }, [appState.reminderSettings, appState.lastDailyNotification, appState.lastWeeklyNotification, setAppState]);
 
-  // Update functions อื่น ๆ (เวอร์ชันใหม่ที่สะอาดกว่า)
+  // Update daily habits
   const updateDailyHabits = (week: number, day: number, field: string, value: boolean | string) => {
     setAppState((prev) => {
       const dailyHabits = prev.dailyHabits || {};
@@ -142,10 +154,15 @@ export default function App() {
     });
   };
 
+  // Update weekly feelings (type-safe with full default)
   const updateWeeklyFeelings = (week: number, field: string, value: number) => {
     setAppState((prev) => {
       const weeklyFeelings = prev.weeklyFeelings || {};
-      const weekData = weeklyFeelings[week] || {};
+      const weekData = weeklyFeelings[week] || {
+        morningPain: 0, morningEnergy: 0, mentalClarity: 0,
+        energyAfterActivity: 0, achesAndPains: 0, mood: 0,
+        hunger: 0, gutHealth: 0, sleepinessAtBedtime: 0, sleepQuality: 0,
+      };
       return {
         ...prev,
         weeklyFeelings: {
@@ -172,11 +189,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans">
-      {/* ลบ banner นี้เมื่อขึ้น production จริงแล้ว */}
-      <div className="bg-red-600 text-white text-center py-1 text-[10px] font-bold uppercase tracking-widest">
-        --- New Version 1.2.1 ---
-      </div>
-
       <header className="bg-white border-b border-stone-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
@@ -186,7 +198,7 @@ export default function App() {
                 <h1 className="text-xl font-semibold tracking-tight text-stone-800 leading-none">
                   IF 12-Week Tracker
                 </h1>
-                <span className="text-[10px] text-stone-400 font-medium">Version 1.2.1 (Final)</span>
+                <span className="text-[10px] text-stone-400 font-medium">Version 1.2.2</span>
               </div>
             </div>
 
@@ -203,22 +215,69 @@ export default function App() {
               }}
               className="text-[10px] bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1 rounded border border-red-200 font-bold transition-colors"
             >
-              Force Update (ล้างแคช)
+              Force Update
             </button>
           </div>
 
-          <nav className="flex space-x-8 overflow-x-auto">
-            {/* Tabs ทั้ง 5 ตัว (เหมือนโค้ดใหม่) */}
-            {/* ... (code tab เหมือนเดิม แต่เพิ่ม Feedback tab) ... */}
+          {/* Navigation Tabs */}
+          <nav className="flex space-x-1 overflow-x-auto pb-0 -mb-px">
+            {TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    isActive
+                      ? 'border-emerald-500 text-emerald-600'
+                      : 'border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
           </nav>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'profile' && <Profile /* props เหมือนเดิม */ />}
-        {activeTab === 'daily' && <DailyTracker /* props */ />}
-        {activeTab === 'weekly' && <WeeklyAssessment /* props */ />}
-        {activeTab === 'charts' && <ProgressCharts /* props */ />}
+        {activeTab === 'profile' && (
+          <Profile
+            personalData={appState.personalData}
+            checkupData={appState.checkupData}
+            reminderSettings={appState.reminderSettings}
+            updatePersonalData={updatePersonalData}
+            updateCheckupData={updateCheckupData}
+            updateReminderSettings={updateReminderSettings}
+            appState={appState}
+            importAppState={importAppState}
+          />
+        )}
+        {activeTab === 'daily' && (
+          <DailyTracker
+            dailyHabits={appState.dailyHabits}
+            updateDailyHabits={updateDailyHabits}
+            personalData={appState.personalData}
+          />
+        )}
+        {activeTab === 'weekly' && (
+          <WeeklyAssessment
+            weeklyFeelings={appState.weeklyFeelings}
+            updateWeeklyFeelings={updateWeeklyFeelings}
+            weeklyMetrics={appState.weeklyMetrics}
+            updateWeeklyMetrics={updateWeeklyMetrics}
+          />
+        )}
+        {activeTab === 'charts' && (
+          <ProgressCharts
+            personalData={appState.personalData}
+            weeklyMetrics={appState.weeklyMetrics}
+            dailyHabits={appState.dailyHabits}
+          />
+        )}
         {activeTab === 'feedback' && <Feedback />}
       </main>
     </div>
