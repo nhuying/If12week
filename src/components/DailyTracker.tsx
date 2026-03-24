@@ -154,7 +154,11 @@ export default function DailyTracker({ dailyHabits, updateDailyHabits, personalD
                 );
               })}
               <td className="px-4 py-4 text-center font-semibold text-stone-600 bg-stone-50">
-                -
+                {DAYS.reduce((sum, _, dayIdx) => {
+                  const dayData = getDayData(dayIdx);
+                  const val = parseInt((dayData?.stepsCount as string) || '0');
+                  return sum + (val >= targetSteps && targetSteps > 0 ? 1 : 0);
+                }, 0)}
               </td>
             </tr>
 
@@ -188,7 +192,8 @@ export default function DailyTracker({ dailyHabits, updateDailyHabits, personalD
               })}
               <td className="px-4 py-4 text-center font-semibold text-stone-600 bg-stone-50">
                 {DAYS.reduce((sum, _, dayIdx) => {
-                  const val = parseInt((weekData[dayIdx]?.stretchingTime as string) || '0');
+                  const dayData = getDayData(dayIdx);
+                  const val = parseInt((dayData?.stretchingTime as string) || '0');
                   return sum + (val >= targetStretching && targetStretching > 0 ? 1 : 0);
                 }, 0)}
               </td>
